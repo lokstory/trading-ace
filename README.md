@@ -1,4 +1,4 @@
-## Exchange V1
+## Trading Ace
 
 ### Prerequisites
 
