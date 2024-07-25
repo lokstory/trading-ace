@@ -1,0 +1,2 @@
+env GO111MODULE=on CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./build/worker/main cmd/worker/main.go
+env GO111MODULE=on CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./build/api/main cmd/api/main.go

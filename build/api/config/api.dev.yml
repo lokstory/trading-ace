@@ -1,0 +1,5 @@
+http:
+  address: ":3000"
+
+database:
+  dsn: "postgres://postgres:postgres@psql:5432/trading_ace?sslmode=disable"

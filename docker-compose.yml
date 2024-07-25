@@ -1,0 +1,45 @@
+version: "3.6"
+
+services:
+  psql:
+    image: postgres:16.3
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: trading_ace
+    volumes:
+      - ./build/psql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "15432:5432"
+    healthcheck:
+      test: "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  api:
+    build:
+      context: .
+      dockerfile: ./build/api/Dockerfile
+    environment:
+      CONFIG_PATH: /config/api.dev.yml
+    volumes:
+      - ./build/api/config:/config
+    command: ["/app/main"]
+    ports:
+      - "3000:3000"
+    depends_on:
+      psql:
+        condition: service_healthy
+  worker:
+    build:
+      context: .
+      dockerfile: ./build/worker/Dockerfile
+    environment:
+      CONFIG_PATH: /config/worker.dev.yml
+    volumes:
+      - ./build/worker/config:/config
+    command: ["/app/main"]
+    depends_on:
+      psql:
+        condition: service_healthy
